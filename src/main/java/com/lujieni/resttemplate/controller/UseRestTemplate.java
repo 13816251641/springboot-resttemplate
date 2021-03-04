@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.lujieni.resttemplate.common.RequestDTO;
 import com.lujieni.resttemplate.domain.po.PersonPO;
+import com.lujieni.resttemplate.interceptor.SignatureRequestInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,6 +63,9 @@ public class UseRestTemplate {
     private <T> T postForObject(String url, Object request, TypeReference<T> typeReference, Object... urlVariables) {
         String requestJson = JSON.toJSONString(request);
         HttpEntity<String> entity = new HttpEntity(requestJson,getHttpHeaders());//没有getHttpHeaders()不可以
+
+        this.restTemplate.setInterceptors(Arrays.asList(new SignatureRequestInterceptor()));
+
         String json = this.restTemplate.exchange(url, HttpMethod.POST, entity, String.class, urlVariables).getBody();
         return JSON.parseObject(json, typeReference);
     }
