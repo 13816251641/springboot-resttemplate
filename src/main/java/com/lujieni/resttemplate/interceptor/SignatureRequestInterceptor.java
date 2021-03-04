@@ -86,6 +86,5 @@ public class SignatureRequestInterceptor implements ClientHttpRequestInterceptor
         ClientHttpResponse response = execution.execute(request, body);
         logger.info("request the itf success");
         return response;
-
     }
 }
